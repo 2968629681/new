@@ -7,16 +7,12 @@
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
-import DevicePixelRatio from './utils/devicePixelRatio';
 
 export default {
   name: 'App',
   components: {
     HelloWorld
-  },
-  created() {
-    new DevicePixelRatio().init();
-	}
+  }
 }
 </script>
 

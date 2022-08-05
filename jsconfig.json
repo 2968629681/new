@@ -9,10 +9,6 @@
         "src/*"
       ]
     },
-<<<<<<< HEAD
-    "jsx": "preserve", //添加配置
-=======
->>>>>>> ccdef360b0f8dde89980298b145e11f6f970de5f
     "lib": [
       "esnext",
       "dom",
