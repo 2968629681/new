@@ -1,16 +1,19 @@
 <template>
   <div id="app">
-    <HelloWorld/>
+    <StatusBar/>
+    <MainContent/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import StatusBar from './components/StatusBar.vue'
+import MainContent from "./components/MainContent.vue";
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    StatusBar,
+    MainContent
   }
 }
 </script>
