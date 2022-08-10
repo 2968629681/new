@@ -6,12 +6,14 @@ import 'element-ui/lib/theme-chalk/index.css'
 //引入axios
 import axios from 'axios';
 Vue.prototype.$axios = axios;
+axios.defaults.baseURL = 'http://trader.niuwx.cn';
+ 
 // 引入VueRouter
 import VueRouter from 'vue-router'
 //引入路由器
 import router from './router'
 // 引入vuex
-import store from './store/index'
+import store from './store/index';
 
 Vue.use(VueRouter)
 

@@ -1,28 +1,28 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
- 
 Vue.use(Vuex)
  
+// 用来存储数据
 const state = {
-  pjtnews: 0,
-  count: 1
+ token:''
 }
-//准备mutations——用于操作数据（state）
-const mutations = {
-  add(state) {
-    state.count += 1;
-  },
-  reduce(state) {
-    state.count -= 1;
-  }
-}
-
+// 响应组件中的事件
 const actions = {
-  
+ 
 }
-//创建并暴露store
+// 操作数据
+const mutations = {
+ 
+}
+// 用来将state数据进行加工
+const getters = {
+ 
+}
+// 新建并暴露store
 export default new Vuex.Store({
-  actions,
-  mutations,
-  state
-});
+    state,
+    actions,
+    mutations,
+    getters
+})
+ 

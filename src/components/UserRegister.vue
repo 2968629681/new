@@ -84,7 +84,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$axios.post('/api/user/register',{
+          this.$axios.post('http://trader.niuwx.cn/api/user/register',{
               "username":this.form.username,
               "password":this.form.password,   
             }

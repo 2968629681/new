@@ -3,6 +3,7 @@
 import Vue from 'vue'
 //安装好后就会有vue-router
 import VueRouter from 'vue-router'
+
 import Register from "../components/UserRegister.vue"
 import Login from "../components/UserLogin.vue"
 import MainPage from "../components/MainPage.vue"
@@ -11,9 +12,15 @@ import MainPage from "../components/MainPage.vue"
 Vue.use(VueRouter);
 
 // 1.创建路由对象
+
+ 
+
+ 
 const router = new VueRouter({
-    // 2.添加路由配置，通过routes来添加路由配置
-    routes: [
+     /*
+      *   在这里和vue2一样写路由配置
+     */
+     routes: [
         //3.添加具体的路由配置：配置的本质就是将路由映射到组件
         // {
         //     name: 'index',

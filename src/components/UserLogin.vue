@@ -1,4 +1,5 @@
 <template>
+
   <div class="login-container">
     <el-form  status-icon  ref="ruleForm" label-width="100px"  class="register-form">
       <h2 class="title-zc">登录</h2>
@@ -18,6 +19,7 @@
 </template>
   
 <script>
+// import store from "../store/index";
    export default {
     name:'UserLogin',
     data() {
@@ -40,8 +42,8 @@
               "password":this.password
             }
           }).then(res=>{
-              this.$router.replace({name:'mainpage'})
-              console.log(res.data);
+            this.$store.state.token=res.data.token
+            this.$router.replace({name:'mainpage'})
             },err=>{
               console.log(err);
             })
@@ -50,7 +52,7 @@
       ToRegister(){
         this.$router.replace({name:'register'})
       }
-    }
+    },
   }
 </script>
 

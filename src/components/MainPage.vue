@@ -1,7 +1,7 @@
 <template>
     <div>
-        <MainContent/>
-        <StatusBar/>      
+        <StatusBar/>  
+        <MainContent/>    
     </div>   
 </template>
 
@@ -14,7 +14,7 @@ export default {
     components:{
         MainContent,
         StatusBar
-    }
+    },
 }
 </script>
 
