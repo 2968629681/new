@@ -119,6 +119,8 @@
 export default {
     data(){
         return {
+          delete:false,
+          increase:false,
           formLabelWidth: '120px',
           dialogFormVisible: false,
           trade:{name:''},
@@ -170,7 +172,7 @@ export default {
     methods: {
         // 动态添加
         addmembers() {
-          console.log(this.$data.trade.name)
+          this.$data.increase=true
           var that=this
           this.$axios({
                 url:'/api/symbols/check',
@@ -189,17 +191,15 @@ export default {
                 message: '新增交易对成功',
                 type: 'success'
               });
-              var transient=Object.assign({},that.$data.first)
-              transient.push({name:that.$data.trade.name})
               var updata=[]
-              for (let index = 0; index < transient.length; index++) {
-                updata[index] =  transient[index].name;
+              for (let index = 0; index < that.$data.first.length; index++) {
+                updata[index] =  that.$data.first[index].name;
               }
+              updata.push(that.$data.trade.name)
+              console.log(updata);
               that.$data.trade.name=''
-              transient.push({name:'123123'})
-              transient.push({name:'4124124'})
               that.$axios({
-                url:'/api/user/set/symbols',
+                url:'/api/symbols/set',
                 method:'post',
                 headers: {
                   Authorization : that.$store.state.token
@@ -218,7 +218,7 @@ export default {
         },
         // 删除
         deleteRow(index) {
-          console.log(index);
+          this.$data.delete=true
           var that = this;
           this.$confirm('确认删除吗?', '提示', {
           confirmButtonText: '确定',
@@ -226,15 +226,21 @@ export default {
           type: 'warning'
           }).then(() => {
               //点击确定的操作(调用接口)
+              console.log('删除');
               var updata=[]
               var j=0
-              for (let i = 0; i < that.$data.first.length; i++) {
+              if(that.$data.first.length==index+1){
+                for (let i = 0; i < that.$data.first.length-1; i++) {
+                updata[i] = that.$data.first[i].name;
+                }
+              }
+              else for (let i = 0; i < that.$data.first.length; i++) {
                 if(i == index) i++
-                updata[j] =  that.$data.first[i].name;
+                updata[j] = that.$data.first[i].name;
                 j++
               }
               that.$axios({
-                url:'/api/user/set/symbols',
+                url:'/api/symbols/set',
                 method:'post',
                 headers: {
                   Authorization : that.$store.state.token
@@ -351,8 +357,6 @@ export default {
         },
         addfirst(){
           var that =this
-          if(this.$store.state.token == '') this.$router.replace({name:'login'})
-          console.log(this.$store.state.token);
           this.$axios({
                 url:'/api/symbols/get',
                 method:'post',
@@ -360,10 +364,22 @@ export default {
                   Authorization : this.$store.state.token
                 }
             }).then(function(res){
-              console.log(res.data);
-              for (let index = 0; index < res.data.symbols.length; index++) {
-              if(index<res.data.symbols.length-1) that.$data.first.push({name:''})
-              that.$data.first[index].name=res.data.symbols[index]
+              if(that.$data.increase){
+                that.$data.first.push({name:''})
+                for (let index = 0; index < res.data.symbols.length; index++) {
+                  that.$data.first[index].name=res.data.symbols[index]
+                }
+                that.$data.increase=false
+              }
+              else if(that.$data.delete){
+                that.$data.first.pop()
+                for (let index = 0; index < res.data.symbols.length; index++) {
+                  that.$data.first[index].name=res.data.symbols[index]
+                }
+              }
+              else for (let index = 0; index < res.data.symbols.length; index++) {
+                if(index<res.data.symbols.length-1) that.$data.first.push({name:''})
+                that.$data.first[index].name=res.data.symbols[index]
               }
           }).catch(function(err){
             console.log(err);
@@ -371,6 +387,9 @@ export default {
         }
       },
 		mounted() {
+      // 判断是否登入
+      if(this.$store.state.token == '') this.$router.replace({name:'login'})
+      // 开启心跳
 			this.currentTime()
       // 请求第一个表格的数据
       this.addfirst()
