@@ -15,6 +15,11 @@ import router from './router'
 // 引入vuex
 import store from './store/index';
 
+// 将时间戳转换为时间
+import moment from 'moment';
+Vue.prototype.$moment = moment;
+
+
 Vue.use(VueRouter)
 
 Vue.use(ElementUI)

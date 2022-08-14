@@ -3,7 +3,6 @@
   <div style="height:400px;display: flex">
     <div>
       <el-table
-        class="up"
         :data="first"
         height="90%"
         border
@@ -25,30 +24,109 @@
             移除
           </el-button>
         </template>
-      </el-table-column>
+        </el-table-column>
       </el-table>
       <el-button @click="dialogFormVisible = true" height="10%" style="align-self: flex-end;">新增交易对</el-button>
-     </div>
+    </div>
 
       <!-- 用来新增交易对的表单 -->
-     <el-dialog title="新增交易对" :visible.sync="dialogFormVisible">
-      <el-form :model="trade">
-        <el-form-item label="交易对名称" :label-width="formLabelWidth">
-          <el-input v-model="trade.name" autocomplete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addmembers()">确 定</el-button>
+      <el-dialog title="新增交易对" :visible.sync="dialogFormVisible">
+        <el-form :model="trade">
+          <el-form-item label="交易对名称" :label-width="formLabelWidth">
+            <el-input v-model="trade.name" autocomplete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="addmembers()">确 定</el-button>
+        </div>
+      </el-dialog>
+
+      <!-- 两个表格直接的间隔 -->
+      <div style="width:5%"></div>
+    
+      <!-- 搜索框 -->
+      <div height="100%" style="width: 50%;margin-right: -22%;">
+        <div height="10%" style="margin-bottom: -20px;">
+          <el-form :inline="true" :model="search" class="demo-form-inline">
+            <el-form-item label="" style="width:15%">
+              <el-input v-model="search.interval" placeholder="间隔"></el-input>
+            </el-form-item>
+            <el-form-item label="" style="width:15%">
+              <el-input v-model="search.amplitue" placeholder="振幅"></el-input>
+            </el-form-item>
+            <el-form-item label="" style="width:15%">
+              <el-input v-model="search.amplituePercentage" placeholder="振幅百分比"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="onSubmit">查询</el-button>
+            </el-form-item>
+          </el-form>
+        </div>
+
+        <el-table
+          @row-dblclick="double"
+          :data="second"
+          height="90%"
+          border
+          style="width: 58%">
+          <el-table-column
+            prop="Symbol"
+            label="交易对名称"
+            width="217">
+          </el-table-column>
+          <el-table-column
+            prop="Klines.length"
+            label="出现的次数"
+            width="217">
+          </el-table-column>
+        </el-table>
       </div>
+
+      <!-- 双击之后显示的详情 -->
+    <el-dialog :title="doublename" :visible.sync="doubleVisible" width="83%" center>
+      <el-table :data="show" stripe>
+        <el-table-column prop="High" label="最高价" width="200"></el-table-column>
+        <el-table-column prop="Low" label="最低价" width="200"></el-table-column>
+        <el-table-column prop="Open" label="开盘价" width="200"></el-table-column>
+        <el-table-column prop="Close" label="收盘价" width="200"></el-table-column>
+        <el-table-column prop="amplitue" label="振幅百分比" width="200"></el-table-column>
+        <el-table-column prop="OpenTime" label="时间(单位毫秒)" width="200"></el-table-column>
+      </el-table>
     </el-dialog>
+      
+      <!-- 两个表格直接的间隔 -->
+      <div style="width:5%"></div>
 
+      <el-table
+        :data="tableData"
+        height="100%"
+        border
+        style="width: 100%">
+        <el-table-column
+          prop="date"
+          label="日期"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="姓名"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="地址">
+        </el-table-column>
+      </el-table>
+   </div>
+
+    <!-- 下面的表单 -->
     <el-table
-      class="up"
       :data="tableData"
       height="100%"
       border
-      style="width: 100%">
+      style="width: 100%"
+      >
       <el-table-column
         prop="date"
         label="日期"
@@ -64,52 +142,6 @@
         label="地址">
       </el-table-column>
     </el-table>
-
-    <el-table
-      class="up"
-      :data="tableData"
-      height="100%"
-      border
-      style="width: 100%">
-      <el-table-column
-        prop="date"
-        label="日期"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="姓名"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="address"
-        label="地址">
-      </el-table-column>
-    </el-table>
-  </div>
-
-  <!-- 下面的表单 -->
- <el-table
-    :data="tableData"
-    height="100%"
-    border
-    style="width: 100%"
-    >
-    <el-table-column
-      prop="date"
-      label="日期"
-      width="180">
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="姓名"
-      width="180">
-    </el-table-column>
-    <el-table-column
-      prop="address"
-      label="地址">
-    </el-table-column>
-  </el-table>
 </div>
   
 </template>
@@ -117,16 +149,25 @@
 <script>
 
 export default {
+  
     data(){
         return {
-          delete:false,
-          increase:false,
-          formLabelWidth: '120px',
-          dialogFormVisible: false,
-          trade:{name:''},
-          first:[{name:''}],
-          second:[{}],
-          third:[{}],
+          show:[{}],                                              //双击之后显示的数组
+          doublename:'',                                          //双击之后表格的名称
+          search:{
+            interval:null,
+            amplitue:null,
+            amplituePercentage:null,
+          },                                                      //搜索的参数
+          doubleVisible:false,                                    //双击之后显示的表单
+          delete:false,                                           //判断是否在进行删除操作，方便更改第一个表格中的数组
+          increase:false,                                         //判断是否在进行新增操作，方便更改第一个表格中的数组
+          formLabelWidth: '120px',                                //点击新增的弹出的表单的大小
+          dialogFormVisible: false,                               //是否显示新增表单
+          trade:{name:''},                                        //表单中的数据
+          first:[{name:''}],                                      //第一个表格
+          second:[{}],                                            //第二个表格
+          third:[{}],                                             //第三个表格
           tableData: [{
             date: '2016-05-03',
             name: '王小虎',
@@ -384,7 +425,69 @@ export default {
           }).catch(function(err){
             console.log(err);
           })
-        }
+        },
+        // 搜索
+        onSubmit(){
+          // 参数全部输入后才可以查询
+          if(this.$data.search.interval==null || this.$data.search.amplitue==null || this.$data.search.amplituePercentage==null){
+            this.$message({
+            message: '警告，请将全部参数都输入再进行搜索',
+            type: 'warning'
+            });
+            return
+          }
+          this.$data.second=[{}]
+          var interval=this.$data.search.interval
+          var amplitue=this.$data.search.amplitue/100
+          var amplituePercentage=this.$data.search.amplituePercentage/100
+          var that=this
+          this.$axios({
+                url:'/api/symbols/search',
+                method:'post',
+                headers: {
+                  Authorization : this.$store.state.token
+                },
+                data:{
+                  interval: interval,
+                  amplitue: amplitue,
+                  amplituePercentage: amplituePercentage,
+                }
+            }).then(function(res){
+              console.log(res.data);
+              that.$data.second=res.data.res
+              for (let index = 0; index < that.$data.second.length; index++) {
+                for (let aindex = index+1; aindex < that.$data.second.length; aindex++) {
+                  if (that.$data.second[aindex].Klines.length > that.$data.second[index].Klines.length) {
+                    var s=that.$data.second[aindex].Klines
+                    that.$data.second[aindex].Klines=that.$data.second[index].Klines
+                    that.$data.second[index].Klines=s
+                  }         
+                }   
+              }
+              console.log(that.$data.second);
+            }).catch(function(err){
+              console.log(err);
+            })
+        },
+        sortFun() {
+          this.$data.show.sort((a, b) => {
+            return b.OpenTime - a.OpenTime;
+          });      
+        },
+        double(row){
+          console.log(row);
+          this.$data.show=[{}]
+          this.$data.doubleVisible=true
+          this.$data.doublename=row.Symbol
+          this.$data.show=row.Klines
+          this.sortFun()
+          for (let index = 0; index < this.$data.show.length; index++) {
+            this.$data.show[index].amplitue=(this.$data.show[index].High-this.$data.show[index].Low)/this.$data.show[index].Close*100
+            let tempVal = parseFloat(this.$data.show[index].amplitue).toFixed(3)
+            this.$data.show[index].amplitue=tempVal
+            this.$data.show[index].OpenTime=this.$moment(this.$data.show[index].OpenTime).format('YYYY-MM-DD HH:mm:ss')
+          }
+        },   
       },
 		mounted() {
       // 判断是否登入
@@ -399,7 +502,7 @@ export default {
 			if (this.formatDate) {
 				clearInterval(this.formatDate); // 在Vue实例销毁前，清除时间定时器
 			}
-		}
+		},
 }
 </script>
 
